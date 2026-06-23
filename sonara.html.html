@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonara — Ben Brown</title>
+<meta name="description" content="Sonara: a rhythm game built solo in Unreal Engine 5, where the world performs the music with you.">
+<meta name="color-scheme" content="light">
+<meta property="og:title" content="Sonara — Ben Brown">
+<meta property="og:description" content="A rhythm game where the world performs the music with you, built solo in Unreal Engine 5.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-name" href="index.html">Ben Brown</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="#contact">Contact</a>
+      <a href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <a class="breadcrumb" href="index.html#work">← All Projects</a>
+
+  <section class="project-header">
+    <p class="eyebrow">Rhythm Game<span class="badge badge-glow badge-inline">In Development</span></p>
+    <h1 class="project-title">Sonara</h1>
+    <p class="tagline">A rhythm game where the world performs the music with you.</p>
+    <div class="project-intro">
+      <p>Sonara is a rhythm game built solo in Unreal Engine 5. A glowing ball travels along a branching path, steered left and right to land on circles synced to a song. What makes it different from most rhythm games is that the environment doesn't just sit there — rocks, trees, and props react to the same beat the player does, so the world feels like it's performing the song alongside you, not just providing a backdrop for it.</p>
+      <p>The footage shown is grey box — no environment art yet. I prioritized getting the underlying systems exactly right before spending time on visuals that would need to be rebuilt if those systems changed.</p>
+    </div>
+    <ul class="tags">
+      <li>Rhythm</li><li>Procedural Audio</li><li>Branching Paths</li>
+    </ul>
+    <p class="tile-engine">Unreal Engine 5 · C++ / Blueprint</p>
+  </section>
+
+  <div class="video-frame">
+    <div class="frame-inner">
+      <p>Video coming soon — mountain &amp; valley fork runs</p>
+      <!--
+        Once the video is uploaded to YouTube (unlisted), delete the <p> above
+        and uncomment/edit this iframe with your real video ID:
+
+        <iframe
+          src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+          title="Sonara gameplay"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      -->
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>How it works</h2>
+    <p>The player steers a ball left and right. Circles appear ahead, placed at exact timestamps pulled from the song's waveform, and the ball automatically arcs toward whichever one is next — landing on it exactly on the beat. Partway through, the path forks into two routes with different rhythmic identities, then merges back together before the song's most intense section.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Why I built it this way</h2>
+
+    <div class="subsection">
+      <h3>Why a hardware-locked audio clock instead of a free-running timer</h3>
+      <p>Early versions used a simple timer to track musical time. Over a 45-second song, even a millisecond of drift per beat accumulates into noticeable desync — the ball stops landing on the beat by the end of the track. I rebuilt the timing system around Unreal's Quartz subsystem, which locks to the actual audio hardware rather than counting time independently. The clock and the song are now mathematically guaranteed to stay in sync regardless of song length.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Why timestamps instead of beat numbers</h3>
+      <p>My first approach placed circles at calculated beat numbers (beat 1, beat 2, beat 3...) assuming a perfectly steady tempo. Real recorded music isn't perfectly metronomic — a live drummer pushes and pulls slightly even on a click track. I switched to placing circles at exact timestamps taken directly from analyzing the song's waveform in Audacity, so each circle lands exactly where the music actually hits, not where math says it theoretically should.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Why a modular spline architecture</h3>
+      <p>A single spline can't support branching paths — there's no way for one curve to represent two different routes through the same section of music. I built a system where each section of the path is its own independent spline object, holding its own circle data. The ball can switch between sections at runtime, including reassigning which section it "came from" dynamically — which became necessary once paths could merge back together from two different directions.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Why one reusable actor drives all environment choreography</h3>
+      <p>Rather than hand-animating individual props, I built a single reusable actor (internally called BP_BounceProp) that listens to the same beat clock the ball does. Any prop — a rock, a tree, a piece of foliage — can be dropped into the level and given this behavior, with its own height, rotation range, and timing offset. A global intensity value scales every instance at once, so the whole environment can escalate together during a song's most intense moment without touching each prop individually.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Problems I had to actually debug</h2>
+
+    <div class="bug-block">
+      <span class="bug-tag">Bug</span>
+      <h3>The double-fire bug</h3>
+      <p>For a while, hit detection and the score system were firing twice per beat — sometimes consistently, sometimes only on certain circles. I tried several fixes at the flag level in C++, and each one either didn't work or broke something else (the ball would freeze after two beats, or stop syncing on fast sections).</p>
+      <p>The actual cause turned out to be a re-entrancy problem: when the beat event fired, the Blueprint logic that responded to it would set up the next beat's timestamp while still inside the same function call that had just fired the event. That reset a "has this fired" flag before the original call had fully finished, which let a second, overlapping check pass and fire the event again in the same frame. The real fix was removing a small timing tolerance window that, combined with that reset, created a brief window where the condition could pass twice. Once removed, the event fires exactly once per beat, every time.</p>
+    </div>
+
+    <div class="bug-block">
+      <span class="bug-tag">Bug</span>
+      <h3>The triplet timing bug</h3>
+      <p>The ball started landing visibly behind circles, but only during a fast triplet section — never on normal beats. I initially suspected timestamp precision, then frame rate, then audio subdivision granularity. None of those held up under testing.</p>
+      <p>The actual cause was that I'd stretched the spline's length earlier without re-checking circle spacing. The circles were still the correct distance apart in time, but now much farther apart in world space than the available arc duration accounted for — so the ball had to travel faster than the timing allowed, and that error was only large enough to notice on the very tight triplet timing. Restoring proportional spacing between the spline length and the circle timestamps fixed it immediately.</p>
+    </div>
+
+    <div class="bug-block">
+      <span class="bug-tag">Bug</span>
+      <h3>Making a cutscene start from an unpredictable position</h3>
+      <p>The ending plays a short cutscene, but the ball can land at a different final position depending on which fork the player took. Unreal's Sequencer tool bakes keyframe values into the sequence asset at edit time — there's no direct way to rewrite a keyframe's value at runtime.</p>
+      <p>I solved this the way it's typically handled for this exact problem: an invisible anchor actor gets moved to match the ball's actual landing position the moment the cutscene triggers, and the cutscene's actual animation is keyframed relative to that anchor rather than as absolute world positions. The numbers in the sequence never change — only where the anchor places them changes, so the cutscene always begins exactly where the player actually finished, regardless of which path they took.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>A decision I reversed</h2>
+    <div class="decision-block">
+      <p>At one point I considered making the ball's bounce direction follow the path's banking angle, so it would visually launch perpendicular to a tilted circle's surface instead of always straight up. It looked great on paper, but if the path ever curved past a certain bank angle, the same logic would have caused the ball to bounce in a physically wrong direction relative to the player's expectations.</p>
+      <p>I reverted to a simpler world-relative bounce and accepted a minor visual inconsistency on sharply banked sections, rather than risk a system that could break the core feel of the game under specific path geometry. I've noted a cleaner version of this for later — reading bounce direction from each circle's own rotation instead of the path's banking — but it wasn't worth the risk for the current build.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>What's not built yet, on purpose</h2>
+    <p>Environment art, VFX, additional choreography (water, wildlife, lighting), and a start/end statistics screen are all deliberately not in this build. The systems above were the part that needed to be correct before any of that work could be trusted not to need redoing.</p>
+  </section>
+
+  <nav class="footer-nav">
+    <a href="index.html#work">← Back to all projects</a>
+  </nav>
+
+</main>
+
+<footer id="contact">
+  <p class="footer-name">Ben Brown</p>
+  <p class="footer-contact">[your.email@example.com] · <a href="https://github.com/benbrowndev">github.com/benbrowndev</a></p>
+  <p class="footer-meta">Built and deployed by hand. © 2026.</p>
+</footer>
+
+</body>
+</html>
