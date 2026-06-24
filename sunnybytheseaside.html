@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunny By the Seaside — Ben Brown</title>
+<meta name="description" content="Sunny By the Seaside: a lighting study rendered in Unreal Engine with a custom HDRI, composited in Nuke across multiple light passes.">
+<meta name="color-scheme" content="light">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-name" href="index.html">Ben Brown</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="#contact">Contact</a>
+      <a href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <a class="breadcrumb" href="index.html#work">← All Projects</a>
+
+  <section class="project-header">
+    <p class="eyebrow">Lighting Study · [Year]</p>
+    <h1 class="project-title">Sunny By the Seaside</h1>
+    <p class="tagline">A lighting study taken from a custom HDRI in Unreal to a multi-pass composite in Nuke.</p>
+
+    <div class="role-meta">
+      <p><span>Render</span>Unreal Engine</p>
+      <p><span>Comp</span>Nuke</p>
+      <p><span>Lighting</span>Custom-built HDRI</p>
+    </div>
+
+    <ul class="tags">
+      <li>Lighting</li><li>Compositing</li><li>Nuke</li><li>Unreal Engine</li>
+    </ul>
+  </section>
+
+  <div class="video-frame">
+    <img class="hero-image" src="sunnybytheseaside-final.jpg" alt="Final rendered and composited shot of a sunlit attic room, with a telescope, bicycle, globe, and instruments lit by warm light through a round window">
+  </div>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Overview</h2>
+    <p>Sunny By the Seaside is a lighting study, not a game — the goal was practicing how light alone can establish mood and guide a player's eye through a space. The render was lit and rendered in Unreal Engine, then taken into Nuke for a multi-pass composite where the final balance of light, atmosphere, and focus was tuned.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Lighting Setup</h2>
+    <p>Rather than relying on a stock HDRI, I built a custom one specifically for this shot to control where the warm key light sits relative to the room's windows.</p>
+
+    <figure class="content-figure">
+      <img src="sunnybytheseaside-hdri.jpg" alt="Custom HDRI created for lighting the scene, showing a soft warm sun low on the horizon against a hazy sky">
+      <figcaption>The custom HDRI used to light the scene inside Unreal — the sun's position and softness were authored directly to match the mood the shot needed.</figcaption>
+    </figure>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Compositing Breakdown</h2>
+    <p>The render wasn't comped as a single flattened image — it came out of Unreal split into separate light contributions, then rebalanced and finished in Nuke.</p>
+
+    <div class="subsection">
+      <h3>Background &amp; sky</h3>
+      <p>The background render is split into Diffuse Direct, Diffuse Indirect, and Direct passes, each pushed through its own grade and exposure before being recombined. That separation makes it possible to push the indirect bounce light brighter or darker independently of the direct key light, without going back into Unreal to re-render. A separate sky plate is reformatted and merged in behind the geometry.</p>
+      <figure class="content-figure">
+        <img src="sunnybytheseaside-nuke-bg.jpg" alt="Nuke node graph showing the sky plate and background diffuse direct, diffuse indirect, and direct passes being shuffled, graded, and merged">
+        <figcaption>Background comp: sky plate plus the background's direct, indirect, and direct light passes, each graded independently before merging.</figcaption>
+      </figure>
+    </div>
+
+    <div class="subsection">
+      <h3>Foreground</h3>
+      <p>The foreground objects — the desk, telescope, and instruments closest to camera — go through the same direct/indirect/direct split as the background, then a premult and a soft blur before merging over the background. The blur helps separate the foreground read from the background plate rather than letting both sit at the same apparent sharpness.</p>
+      <figure class="content-figure">
+        <img src="sunnybytheseaside-nuke-fg.jpg" alt="Nuke node graph showing the foreground diffuse indirect, diffuse direct, and direct passes being merged, premultiplied, and blurred before compositing over the background">
+        <figcaption>Foreground comp: the same multi-pass light split applied to the foreground elements, then premultiplied and softened before merging over the background.</figcaption>
+      </figure>
+    </div>
+
+    <div class="subsection">
+      <h3>Volumetrics, vignette &amp; finishing</h3>
+      <p>A dedicated volumetrics pass is screen-blended on top to add atmospheric scatter in the light shafts. From there, a vignette is built from two roto shapes feeding their own grade and exposure nodes — hand-placed darkening rather than a generic radial falloff — so the corners pull the eye toward the window without it reading as an obvious filter. A depth-based defocus and a final color correct finish the shot before the write node.</p>
+      <figure class="content-figure">
+        <img src="sunnybytheseaside-nuke-comp.jpg" alt="Nuke node graph showing the volumetrics pass screen-blended in, a roto-based vignette, depth defocus, color correct, and the final write node">
+        <figcaption>Final finishing: volumetrics merged in screen mode, a hand-rotoed vignette, depth defocus, color correct, then the write node.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <nav class="footer-nav">
+    <a href="index.html#work">← Back to all projects</a>
+  </nav>
+
+</main>
+
+<footer id="contact">
+  <p class="footer-name">Ben Brown</p>
+  <p class="footer-contact">[your.email@example.com] · <a href="https://github.com/benbrowndev">github.com/benbrowndev</a></p>
+  <p class="footer-meta">Built and deployed by hand. © 2026.</p>
+</footer>
+
+</body>
+</html>
