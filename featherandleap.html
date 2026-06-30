@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feather and Leap — Ben Brown</title>
+<meta name="description" content="Feather and Leap: a co-op university capstone project — art direction, 2D lighting, and gameplay systems including a custom water shader and rope physics.">
+<meta name="color-scheme" content="light">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-name" href="index.html">Ben Brown</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="#contact">Contact</a>
+      <a href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <a class="breadcrumb" href="index.html#work">← All Projects</a>
+
+  <section class="project-header">
+    <p class="eyebrow">Team Project · University · [Year]</p>
+    <h1 class="project-title">Feather and Leap</h1>
+    <p class="tagline">A co-op game about a stork and a frog restoring their corrupted swamp home.</p>
+
+    <div class="role-meta">
+      <p><span>Roles</span>Team Lead, Art Director, Lighting, Coding, Art</p>
+      <p><span>Engine</span>Unity (C#)</p>
+      <p><span>Team</span>University capstone project — 4 members</p>
+    </div>
+
+    <ul class="tags">
+      <li>Art Direction</li><li>2D Lighting</li><li>Gameplay Code</li>
+    </ul>
+    <p class="tile-engine">Unity (C#) · 4-person team</p>
+  </section>
+
+  <div class="video-frame">
+    <div class="frame-inner">
+      <iframe
+        src="https://www.youtube.com/embed/sP70ArBXjzs"
+        title="Feather and Leap gameplay / trailer"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>The Game</h2>
+    <p>A co-op game where you play as two best friends, a stork named Feather and a frog named Leap. Toxins have spread through your homeland, and it's up to you to find the Seed of Purification to restore it.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Art Direction &amp; Art</h2>
+
+    <div class="subsection">
+      <div class="image-frame">
+        <div class="frame-inner">
+          <p>Image coming soon — children's book art style reference</p>
+        </div>
+      </div>
+      <h3>Art Direction</h3>
+      <p>We went for a children's book look, inspired by Frog and Toad. Line art, solid colors, bold silhouettes, and almost no shading. The goal was to make the game feel like you're playing through a storybook.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="image-frame">
+        <img src="featherleap-bgart.jpg" alt="Parallax swamp background art with purple sky, dead trees, and fog" loading="lazy">
+      </div>
+      <h3>Background Art</h3>
+      <p>The 2D backgrounds were built to feel like a corrupted swamp: a purple sky, heavy fog, and dead trees. Each element sits on its own layer, and in Unity those layers move at different speeds relative to the character to create a parallax effect. Lighting each layer separately on top of that added depth and contrast between them.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="image-row">
+        <figure class="content-figure">
+          <img src="featherleap-tileset.jpg" alt="Tile set strip showing the combined line art and grass color layer over the earth layer">
+        </figure>
+        <figure class="content-figure">
+          <img src="featherleap-tileset-overlay.jpg" alt="Earth secondary pattern overlay used for dirt detail across the tile set">
+        </figure>
+      </div>
+      <h3>Tile Set</h3>
+      <p>The tile set uses flat colors, broken lines, and minimal detail. The broken lines were a deliberate choice. They let tiles get placed without needing perfect edge matching, while still keeping the art style consistent.</p>
+      <p>I built the tile set out of three layers made in Photoshop: a combined line art and grass color layer (the outer edges and grass fill together as one piece), a separate earth solid color layer, and an earth secondary pattern for dirt detail. The combined line art and grass layer and the earth layer became two tile palettes in Unity, with the line art and grass palette stacked on top of the earth palette, so its line art outlines the earth sections beneath it too.</p>
+      <p>For the dirt detail, I first tried hand drawing it directly into each earth tile piece. That didn't scale. Since tiles get mixed and matched freely, a pattern baked into individual pieces only looks right in specific combinations. So instead, the earth secondary pattern is applied as a material overlay on top of the earth tile palette, rather than being its own palette or drawn into individual tiles. That keeps the dirt detail consistent across any combination of earth tiles, and keeps it confined to the ground layer.</p>
+      <p>This layered setup gave precise control over how each part of the overlay behaved. The dirt detail only ever applies to the ground, without bleeding into the line art and grass layer above it. It also meant that when pieces didn't line up exactly while placing a level — like dirt color peeking slightly past its line art boundary — it just read as part of the children's book style instead of a visible error. A perfect imperfection, not something to fix.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="image-frame">
+        <div class="frame-inner">
+          <p>Image coming soon — swamp props and interactable objects</p>
+        </div>
+      </div>
+      <h3>Props &amp; Interactables</h3>
+      <p>Interactive objects were designed to fit the swamp setting: pressure plates and levers built into tree stump bases, boulders as movable objects, vines for hanging objects, and spiked vines and thorns as obstacles.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <div class="image-frame" style="margin:0 0 1.4rem;">
+      <div class="frame-inner">
+        <p>Image coming soon — 2D lighting across parallax layers</p>
+      </div>
+    </div>
+    <h2>Lighting</h2>
+    <p>Lighting was built around Unity's 2D lighting system (Light2D), layered to reinforce the parallax depth from the background art. Each parallax depth (foreground, midground, middle back, and background) has its own set of 2D spot lights for local lighting, plus a separate global light that adjusts that entire layer as a whole. Spot lights handled specific highlights within a layer, while the global light controlled the overall color and intensity for that layer as a group.</p>
+    <p>Layering it this way, combined with the parallax movement, reinforced the sense of depth. Distant layers could be pushed cooler, dimmer, or more purple, while closer layers stayed clearer, which helped sell the corrupted swamp atmosphere without flattening everything into one uniform purple wash.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Coding</h2>
+    <ul>
+      <li>Movement mechanics for both characters (Feather and Leap)</li>
+      <li>Dynamic camera system that zooms in and out based on how far apart the two characters are</li>
+      <li>Feather's attacks: wing gust and beak attack</li>
+      <li>Water physics for both characters, plus separate diving and underwater movement for Leap</li>
+      <li>Custom water shader and the water movement system</li>
+      <li>Rope generator with multiple segments and attached objects, cuttable with Feather's beak attack</li>
+      <li>Object physics, so Feather's wing gust can push large boulders</li>
+    </ul>
+
+    <div class="subsection">
+      <div class="video-frame" style="padding:0;">
+        <div class="frame-inner">
+          <iframe
+            src="https://www.youtube.com/embed/HpCPGy61X7c"
+            title="Feather and Leap dynamic camera system"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+      <h3>Dynamic Camera System</h3>
+      <p>The camera follows the midpoint between Feather and Leap instead of tracking either character on its own, using smoothed movement so it eases into position rather than snapping there directly. Zoom is calculated from the distance between the two characters: that distance gets normalized against a maximum value, then mapped between a minimum and maximum zoom level, and the camera eases toward that target zoom over time instead of jumping to it instantly. This is what keeps both characters in frame as they move apart — the further apart they get, the more the camera zooms out, up to that maximum distance and zoom level. The camera also adjusts its base zoom for the screen's aspect ratio on startup, so the framing stays consistent across different resolutions instead of only looking right on one screen size.</p>
+      <p>On top of the regular follow and zoom behavior, the same camera system handles two scripted sequences. The first plays when a door gets unlocked: the camera pans over to the door, zooms in, holds for a couple of seconds so the player can see it open, then pans back to the characters and resumes normal tracking. The second handles level transitions: the camera pans and zooms to a fixed point, holds briefly, then loads the next scene.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="video-frame" style="padding:0;">
+        <div class="frame-inner">
+          <p>Video coming soon — rope generator and Feather's beak-cut interaction</p>
+        </div>
+      </div>
+      <h3>Rope Generator</h3>
+      <p>Ropes get built with an editor tool rather than generated at runtime during gameplay. A RopeGenerator script, triggered through a right-click menu in the Unity editor, takes two anchor points and a segment count, then places that many rope segment objects evenly spaced between them. Each segment is invisible — its sprite gets set to zero opacity, since it only exists to drive physics. Every segment gets a Rigidbody2D and a hinge joint connecting it to the previous segment in the chain, starting from the first anchor point. That chain of hinge joints is what makes the rope sway and sag naturally through Unity's own physics simulation, instead of needing hand animated motion. A separate object, like a boulder, gets attached to the very last segment through its own hinge joint, so it hangs naturally at the end of the rope.</p>
+      <p>The visible rope itself isn't drawn by these segments directly. Since they're transparent, a separate line renderer component reads the positions of the physics chain each frame and draws the rope's visual line through them. Splitting it this way — an invisible physics chain plus a visual line drawn on top — means the rope's length, segment count, and sag can all be tuned by changing values on the generator and regenerating it instantly through the editor menu, instead of rebuilding it by hand each time.</p>
+      <p>Feather can cut the rope using his beak attack. Attacking near a rope checks whether anything cuttable is within range in front of him, based on which direction he's facing. If the rope is hit, it severs the connection holding up whatever's attached to the end of it, like a boulder, and that object falls naturally rather than being scripted to fall. The cut only releases the hanging object itself, not the rope as a whole, so the rope stays in place while the object drops.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="video-frame" style="padding:0;">
+        <div class="frame-inner">
+          <p>Video coming soon — water physics, floating, and Leap diving underwater</p>
+        </div>
+      </div>
+      <h3>Water Physics &amp; Custom Shader</h3>
+      <p>Both characters can sit on top of the water and get moved by its waves, bobbing at the surface like they're wading. Only Leap can dive underwater, which needed its own movement system built and tuned from scratch.</p>
+      <p>The water itself is a custom, procedurally generated mesh (a WaterMesh script) rather than a static sprite. It's built from a configurable number of segments across a set width, with tunable wave height and wave speed values driving the motion. A Polygon Collider 2D set as a trigger detects when a character enters the water. Each character has its own water interaction script that responds to that trigger and handles its own behavior. The water's surface is rendered with a custom shader (Custom/Water) instead of a built-in Unity material.</p>
+
+      <div class="bug-block">
+        <span class="bug-tag">Problem</span>
+        <h3>Telling floating apart from diving</h3>
+        <p>A single water check point only reports a yes or no: is this object touching water. That stayed true whether Leap was bobbing at the top or fully diving underneath, so there was no way to tell those two states apart from one check alone. The fix was adding a second check point above the frog's head. If that point is clear of the water, Leap is at or above the surface. If it's still inside the water, Leap is below it. Combining the original foot level check with this head level check is what let the system actually tell floating apart from diving, instead of just knowing "in water" in one broad sense. Feather's controller didn't need this, since the stork never goes underwater — it only needs the single foot level check.</p>
+      </div>
+
+      <p>Buoyancy works the same way for both characters. Gravity drops sharply while submerged, and an upward force gets applied continuously, with a hard cap on downward velocity so a character can't sink too fast. That cap matters in a co-op game, since one character could end up landing on or pushing the other while in the water. Sinking on entry isn't a fixed amount either — the depth is calculated from how fast the character was falling when they hit the water, then clamped between a minimum and maximum. Feather's sink depth gets scaled down further on top of that same formula, so the stork settles more gently on the surface than Leap does when diving in. Same underlying system, tuned differently per character.</p>
+      <p>Diving (frog only) is handled as a deliberate override of the buoyancy system rather than blending into it. Holding the dive input switches gravity back to normal and forces the character downward directly. Releasing it eases back into floating gradually, applying a decaying drift to both vertical and horizontal velocity for a moment before normal water buoyancy resumes, instead of snapping back to floating instantly. Horizontal swimming works the same way — letting go of the swim input doesn't stop the character immediately, it decays out over about half a second to mimic water resistance.</p>
+      <p>Leap's script layers a full swim system on top of that same foundation: separate downward and upward swim speeds (diving is faster than surfacing), a lateral drift factor and duration to simulate momentum underwater, and its own ground check group to detect when it's back on solid ground after a dive.</p>
+    </div>
+  </section>
+
+  <nav class="footer-nav">
+    <a href="index.html#work">← Back to all projects</a>
+  </nav>
+
+</main>
+
+<footer id="contact">
+  <p class="footer-name">Ben Brown</p>
+  <p class="footer-contact">[your.email@example.com] · <a href="https://github.com/benbrowndev">github.com/benbrowndev</a></p>
+  <p class="footer-meta">Copyright © 2026 by Ben Brown</p>
+</footer>
+
+</body>
+</html>
