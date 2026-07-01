@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RaceStorm — Ben Brown</title>
+<meta name="description" content="RaceStorm: a solo level design and FPS character systems project built around a multiplayer race concept.">
+<meta name="color-scheme" content="light">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-name" href="index.html">Ben Brown</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="#contact">Contact</a>
+      <a href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <a class="breadcrumb" href="index.html#work">← All Projects</a>
+
+  <section class="project-header">
+    <p class="eyebrow">Level Design &amp; Character Systems · Solo Project · [Year]</p>
+    <h1 class="project-title">RaceStorm</h1>
+    <p class="tagline">A fully playable FPS character moving through a level built for a race that was never wired up.</p>
+
+    <div class="role-meta">
+      <p><span>Role</span>Level Designer, Gameplay Programmer</p>
+      <p><span>Engine</span>Unreal Engine</p>
+      <p><span>Team</span>Solo project (university)</p>
+    </div>
+
+    <ul class="tags">
+      <li>Level Design</li><li>FPS Systems</li><li>Animation Blueprint</li>
+    </ul>
+    <p class="tile-engine">Unreal Engine · Solo Project</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>The Game</h2>
+    <p>RaceStorm is an environment and character control piece built around a concept for a multiplayer FPS. Two teams race to a finish line, activating checkpoints along the way that double as forward spawn points.</p>
+    <p>The checkpoint and team race logic itself was never implemented. What exists is the level, laid out to reflect that race structure, along with a fully playable single player FPS character (movement, shooting, reloading, sound) to move through it.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>What I Built</h2>
+    <ul>
+      <li>Level design and environment, laid out to reflect the intended checkpoint-race structure even though the checkpoint and multiplayer systems themselves weren't built</li>
+      <li>Character movement and animation</li>
+      <li>Shooting system</li>
+      <li>Reloading and ammo count</li>
+      <li>Sound</li>
+    </ul>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <div class="video-frame" style="padding:0;">
+      <div class="frame-inner">
+        <iframe
+          src="https://www.youtube.com/embed/DiXiZVhh7H0"
+          title="RaceStorm level design walkthrough"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+    <h2>Level Design</h2>
+    <p>The level is themed as an airport hangar and laid out as a mostly linear path. One checkpoint per team sits roughly midway between the start and the finish. Each team starts in its own symmetrical spawn area, then both converge into a shared space called the Common Area.</p>
+
+    <div class="subsection">
+      <h3>The Common Area</h3>
+      <p>The Common Area is the first major chokepoint, built around a central staircase splitting into an upper catwalk and a lower floor route. Each team has its own private door on both levels, letting that team move forward without funneling through one shared point, though the other team can still catch a player there from across the room at the opposite elevation. There's also one large shared door in the center, open to both teams and leading either up or down. That shared door is the level's main forced-confrontation point, since running into the other team there is close to guaranteed, making the private doors only the relatively safer option.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>The Hangar</h3>
+      <p>Past the Common Area, the level opens into one large hangar that holds everything else. Both team checkpoints sit roughly halfway through the room, color-coded red and blue, with the finish line at the far end. Unlike the tightly funneled Common Area, the whole hangar functions as open combat space, floor and elevated walkways alike. Parked aircraft, stacked crates, pallets, and forklifts scattered across the floor double as cover.</p>
+      <p>The level shifts from a controlled chokepoint early on into a wide-open arena where the actual race and fighting plays out. Several staircases scattered through the hangar lead up to a second floor, which mainly runs through the middle of the space and along the far sides rather than spanning the whole room. The finish line itself is simply the large open door at the far end of the hangar, not a distinct marked structure.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <div class="video-frame" style="padding:0;">
+      <div class="frame-inner">
+        <iframe
+          src="https://www.youtube.com/embed/1mA0mokw24M"
+          title="RaceStorm character systems — movement, shooting, reloading"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+    <h2>Character Systems</h2>
+
+    <div class="subsection">
+      <h3>Animation</h3>
+      <p>The character's movement runs through an animation blueprint with a blend space, combining idle, walk, and run into one smooth transition instead of snapping between separate animations. A locomotion state machine handles the main movement states plus jump start, loop, and end, with a separate state for aiming.</p>
+      <p>The character's arm animations were built as montages layered on top of that base locomotion, while the pistol itself used its own separate animations played directly rather than through montages. The pistol had to be locked directly to the character's hand bone to track correctly through every animation instead of drifting out of position.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Shooting and Movement Gating</h3>
+      <p>Whether the character is allowed to shoot comes down to one rule: movement speed. Normal walk speed is capped at 300, and holding sprint raises that cap to 600. Pressing aim drops the speed cap back down to 300 as well, slowing the character to walking speed for more controlled aiming. Releasing aim sets the cap back up to 600 instead of returning to 300. That was deliberate. It lets the player move at full sprint speed again. The shoot logic checks against that same 300 threshold, allowing players to only shoot from walking normally or from aiming. While above it, shooting is blocked.</p>
+    </div>
+
+    <div class="bug-block">
+      <span class="bug-tag">Fix</span>
+      <h3>The empty-weapon look</h3>
+      <p>Ammo decrements by one each time the character fires, up to a maximum capacity. Reloading with rounds still in the magazine tops off from what's left rather than wasting them.</p>
+      <p>The tricky part was the moment the magazine actually hit zero. The normal firing animation cycles the slide forward and back each shot, but if that same animation played on the very last round, the weapon would still look like it had a round chambered, even though the logic correctly blocked further shots.</p>
+      <p>The fix checks ammo at one round left. A slide back animation plays instead of a normal firing animation since the slide needs to stay back to signal an empty weapon. If you try firing again while empty, an audible click plays to reinforce that the magazine is empty.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>UI, Inspect, and Polish</h3>
+      <p>Ammo count and a crosshair were added to the screen as UI elements. A weapon-inspect animation runs on its own input, playing as a montage independent of the shooting and movement logic.</p>
+      <p>Sound and visual effects for firing and reloading were layered on top of the existing weapon animations using event triggers tied to specific points in those animations, rather than being built as separate systems of their own.</p>
+    </div>
+  </section>
+
+  <nav class="footer-nav">
+    <a href="index.html#work">← Back to all projects</a>
+  </nav>
+
+</main>
+
+<footer id="contact">
+  <p class="footer-name">Ben Brown</p>
+  <p class="footer-contact">[your.email@example.com] · <a href="https://github.com/benbrowndev">github.com/benbrowndev</a></p>
+  <p class="footer-meta">Copyright © 2026 by Ben Brown</p>
+</footer>
+
+</body>
+</html>
