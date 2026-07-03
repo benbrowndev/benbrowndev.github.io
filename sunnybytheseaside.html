@@ -55,18 +55,18 @@
 
   <section class="content-section">
     <h2>Overview</h2>
-    <p>Sunny By the Seaside is a lighting study, not a game — the goal was practicing how light alone can establish mood and guide a player's eye through a space. The render was Rendered in Maya and composited in Nuke, then taken into Nuke for a multi-pass composite where the final balance of light, atmosphere, and focus was tuned.</p>
+    <p>Sunny By the Seaside is a lighting study, not a game — the goal was practicing how light alone can establish mood and guide a player's eye through a space. The render was Rendered in Maya, then taken into Nuke for a multi-pass composite where the final balance of light, atmosphere, and focus was tuned.</p>
   </section>
 
   <hr class="section-divider">
 
   <section class="content-section">
     <h2>Lighting Setup</h2>
-    <p>Rather than relying on a stock HDRI, I built a custom one specifically for this shot to control where the warm key light sits relative to the room's windows.</p>
+    <p>Rather than relying on a stock HDRI, I built a custom one specifically for this shot to control the colors used in the scene.</p>
 
     <figure class="content-figure">
       <img src="sunnybytheseaside-hdri.jpg" alt="Custom HDRI created for lighting the scene, showing a soft warm sun low on the horizon against a hazy sky">
-      <figcaption>The custom HDRI used to light the scene inside Maya — the sun's position and softness were authored directly to match the mood the shot needed.</figcaption>
+      <figcaption>The custom HDRI used to light the scene inside Maya — the color pallete was authored directly to match the mood the shot needed.</figcaption>
     </figure>
   </section>
 
@@ -74,11 +74,11 @@
 
   <section class="content-section">
     <h2>Compositing Breakdown</h2>
-    <p>The render wasn't comped as a single flattened image — it came out of Maya split into separate light contributions, then rebalanced and finished in Nuke.</p>
+    <p>The render wasn't comped as a single flattened image, rather it came out of Maya split into separate light contributions, then rebalanced and finished in Nuke.</p>
 
     <div class="subsection">
       <h3>Background &amp; sky</h3>
-      <p>The background render is split into Diffuse Direct, Diffuse Indirect, and Direct passes, each pushed through its own grade and exposure before being recombined. That separation makes it possible to push the indirect bounce light brighter or darker independently of the direct key light, without going back into Unreal to re-render. A separate sky plate is reformatted and merged in behind the geometry.</p>
+      <p>The background render is split into Diffuse Direct, Diffuse Indirect, and Direct passes, each pushed through its own grade and exposure before being recombined. That separation makes it possible to push the indirect bounce light brighter or darker independently of the direct key light, without going back into Maya to re-render. A separate sky plate is reformatted and merged in behind the geometry.</p>
       <figure class="content-figure">
         <img src="sunnybytheseaside-nuke-bg.jpg" alt="Nuke node graph showing the sky plate and background diffuse direct, diffuse indirect, and direct passes being shuffled, graded, and merged">
         <figcaption>Background comp: sky plate plus the background's direct, indirect, and direct light passes, each graded independently before merging.</figcaption>
@@ -96,7 +96,7 @@
 
     <div class="subsection">
       <h3>Volumetrics, vignette &amp; finishing</h3>
-      <p>A dedicated volumetrics pass is screen-blended on top to add atmospheric scatter in the light shafts. From there, a vignette is built from two roto shapes feeding their own grade and exposure nodes — hand-placed darkening rather than a generic radial falloff — so the corners pull the eye toward the window without it reading as an obvious filter. A depth-based defocus and a final color correct finish the shot before the write node.</p>
+      <p>A dedicated volumetrics pass is screen-blended on top to add atmospheric scatter in the light shafts. From there, a vignette is built from two roto shapes feeding their own grade and exposure nodes — hand-placed darkening rather than a generic radial falloff which makes the corners pull the eye toward the window without it reading as an obvious filter. A depth-based defocus and a final color correct finish the shot before the write node.</p>
       <figure class="content-figure">
         <img src="sunnybytheseaside-nuke-comp.jpg" alt="Nuke node graph showing the volumetrics pass screen-blended in, a roto-based vignette, depth defocus, color correct, and the final write node">
         <figcaption>Final finishing: volumetrics merged in screen mode, a hand-rotoed vignette, depth defocus, color correct, then the write node.</figcaption>
