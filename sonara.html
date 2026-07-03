@@ -38,11 +38,11 @@
     <h1 class="project-title">Sonara</h1>
     <p class="tagline">A rhythm game where the world performs the music with you.</p>
     <div class="project-intro">
-      <p>Sonara is a rhythm game built solo in Unreal Engine 5. A glowing ball travels along a branching path, steered left and right to land on circles synced to a song. What makes it different from most rhythm games is that the environment doesn't just sit there — rocks, trees, and props react to the same beat the player does, so the world feels like it's performing the song alongside you, not just providing a backdrop for it.</p>
+      <p>Sonara is a rhythm game built solo in Unreal Engine 5. A ball travels along a branching path, steered left and right to land on circles synced to a song. What makes it different from most rhythm games is that the environment doesn't just sit there — rocks, trees, and props react to the same beat the player does, so the world feels like it's performing the song alongside you, not just providing a backdrop for it.</p>
       <p>The footage shown is grey box — no environment art yet. I prioritized getting the underlying systems exactly right before spending time on visuals that would need to be rebuilt if those systems changed.</p>
     </div>
     <ul class="tags">
-      <li>Rhythm</li><li>Procedural Audio</li><li>Branching Paths</li>
+      <li>Rhythm</li><li>Quartz</li><li>Branching Paths</li>
     </ul>
     <p class="tile-engine">Unreal Engine 5 · C++ / Blueprint</p>
   </section>
@@ -62,7 +62,7 @@
 
   <section class="content-section">
     <h2>How it works</h2>
-    <p>The player steers a ball left and right. Circles appear ahead, placed at exact timestamps pulled from the song's waveform, and the ball automatically arcs toward whichever one is next — landing on it exactly on the beat. Partway through, the path forks into two routes with different rhythmic identities, then merges back together before the song's most intense section.</p>
+    <p>The player steers a ball left and right. Circles appear ahead, placed at exact timestamps pulled from the song's timeline, and the ball automatically arcs toward whichever one is next — landing on it exactly on the beat. Partway through, the path forks into two routes with different rhythmic identities, then merges back together before the song's most intense section.</p>
   </section>
 
   <hr class="section-divider">
@@ -94,27 +94,27 @@
   <hr class="section-divider">
 
   <section class="content-section">
-    <h2>Problems I had to actually debug</h2>
+    <h2>Problems I had to debug</h2>
 
     <div class="bug-block">
-      <span class="bug-tag">Bug</span>
-      <h3>The double-fire bug</h3>
+      <span class="bug-tag">Problem</span>
+      <h3>The double-fire</h3>
       <p>For a while, hit detection and the score system were firing twice per beat — sometimes consistently, sometimes only on certain circles. I tried several fixes at the flag level in C++, and each one either didn't work or broke something else (the ball would freeze after two beats, or stop syncing on fast sections).</p>
       <p>The actual cause turned out to be a re-entrancy problem: when the beat event fired, the Blueprint logic that responded to it would set up the next beat's timestamp while still inside the same function call that had just fired the event. That reset a "has this fired" flag before the original call had fully finished, which let a second, overlapping check pass and fire the event again in the same frame. The real fix was removing a small timing tolerance window that, combined with that reset, created a brief window where the condition could pass twice. Once removed, the event fires exactly once per beat, every time.</p>
     </div>
 
     <div class="bug-block">
-      <span class="bug-tag">Bug</span>
-      <h3>The triplet timing bug</h3>
-      <p>The ball started landing visibly behind circles, but only during a fast triplet section — never on normal beats. I initially suspected timestamp precision, then frame rate, then audio subdivision granularity. None of those held up under testing.</p>
-      <p>The actual cause was that I'd stretched the spline's length earlier without re-checking circle spacing. The circles were still the correct distance apart in time, but now much farther apart in world space than the available arc duration accounted for — so the ball had to travel faster than the timing allowed, and that error was only large enough to notice on the very tight triplet timing. Restoring proportional spacing between the spline length and the circle timestamps fixed it immediately.</p>
+      <span class="bug-tag">Problem</span>
+      <h3>Bounce placement inconsistency</h3>
+      <p>The ball started landing visibly behind circles. I initially suspected timestamp precision, then circle world positions, then audio subdivision granularity. None of those held up under testing.</p>
+      <p>The actual cause was when making a spline and stretching it out, if you didnt add points in between the beginning and end of the spline, circle world space positions relative to their position along the spline skews. This was noticable on flatter level sections. The other sections were going uphill and the problem here was the circles were placed too far away from the actual spline center making relative distance along spline also be skewed. Restoring proportional spacing by adding spline points to a stretched spline and keeping circles closer to the spline center when elevation is used fixed it immediately.</p>
     </div>
 
     <div class="bug-block">
-      <span class="bug-tag">Bug</span>
-      <h3>Making a cutscene start from an unpredictable position</h3>
-      <p>The ending plays a short cutscene, but the ball can land at a different final position depending on which fork the player took. Unreal's Sequencer tool bakes keyframe values into the sequence asset at edit time — there's no direct way to rewrite a keyframe's value at runtime.</p>
-      <p>I solved this the way it's typically handled for this exact problem: an invisible anchor actor gets moved to match the ball's actual landing position the moment the cutscene triggers, and the cutscene's actual animation is keyframed relative to that anchor rather than as absolute world positions. The numbers in the sequence never change — only where the anchor places them changes, so the cutscene always begins exactly where the player actually finished, regardless of which path they took.</p>
+      <span class="bug-tag">Problem</span>
+      <h3>Branching paths merge correctly</h3>
+      <p>When two paths merged back into one shared section, the camera transition was breaking. It was breaking because the merge section stored a reference to which path it came from, and that reference was set at edit time to one path. If I took the other fork path, the camera would snap to the path that was assigned which was hard locked. To fix this I needed to dynamically assign the path in which the ball came from live, so right before the ball switches into the merge section, it stamps the merge section's PreviousSection with wherever it actually just came from. </p>
+      <p>Small change in the end, but it only became obvious once I stopped thinking about it as a wiring problem and started thinking about it as a timing problem. The information existed; it was just being captured at the wrong moment.</p>
     </div>
   </section>
 
@@ -143,7 +143,7 @@
 
 <footer id="contact">
   <p class="footer-name">Ben Brown</p>
-  <p class="footer-contact">[your.email@example.com] · <a href="https://github.com/benbrowndev">github.com/benbrowndev</a></p>
+  <p class="footer-contact">[brownben678@gmail.com] · <a href="https://github.com/benbrowndev">github.com/benbrowndev</a></p>
   <p class="footer-meta">Copyright © 2026 by Ben Brown</p>
 </footer>
 
