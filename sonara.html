@@ -68,7 +68,7 @@
   <hr class="section-divider">
 
   <section class="content-section">
-    <h2>The Second Problem</h2>
+    <h2>Taking Control of Beat Events</h2>
     <p>Switching to Quartz immediately solved the drift, but it exposed another limitation. My first Quartz implementation used 1/4 beat subdivision. Every subdivision automatically fired an OnBeat event, and the gameplay simply reacted whenever Quartz advanced to the next beat.</p>
     <p>That worked for evenly spaced rhythms, but I quickly realized I was still giving up too much control. Quartz decided when beat events happened. I wanted to decide that.</p>
     <p>To fix it, I changed two parts of the system. First, I increased the clock resolution to 1/16 triplet subdivision so timing could be evaluated much more frequently. Then I stopped letting Quartz trigger beat events automatically.</p>
