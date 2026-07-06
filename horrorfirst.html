@@ -89,7 +89,7 @@
 
   <section class="content-section">
     <h2>Technical Challenge: Full Game State Persistence</h2>
-    <p>Most student save systems only restore a few player variables. This system needed to restore the entire progression state of the game. Player health, collected teddy animals, defeated bosses, destroyed actors, quest progression, stamina, and player settings all had to survive a save/load cycle so the world returned exactly as the player left it.</p>
+    <p>This system needed to restore the entire progression state of the game. Player health, collected teddy animals, defeated bosses, destroyed actors, quest progression, stamina, and player settings all had to survive a save/load cycle so the world returned exactly as the player left it.</p>
     <p>A SaveData Blueprint stores the game's persistent variables while a BP_QuestManager gathers the current game state, builds the save object, and writes it to disk. Loading follows the same process in reverse, restoring every saved value back into the game.</p>
     <p>The more difficult part wasn't saving the variables. It was restoring the world correctly. Progression is built around defeating bosses that unlock the next area. Loading a save had to restore not only whether a boss was defeated, but everything that depended on it: progression obstacles stayed removed, completed encounters remained complete, and the next area stayed accessible. The goal wasn't simply restoring data, it was restoring the player's progress exactly as they had left it.</p>
   </section>
