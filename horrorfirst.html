@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleepy Trigger — Ben Brown</title>
+<meta name="description" content="Sleepy Trigger: a third-person action game where a boy fights through his own dream to recover three stolen teddy animals.">
+<meta name="color-scheme" content="light">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,900&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="nav-name" href="index.html">Ben Brown</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="#contact">Contact</a>
+      <a href="resume.html">Resume</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <a class="breadcrumb" href="index.html#work">← All Projects</a>
+
+  <section class="project-header">
+    <p class="eyebrow">Team Project · University · 2025</p>
+    <h1 class="project-title">Sleepy Trigger</h1>
+    <p class="tagline">A boy fights through his own dream to recover three stolen teddy animals.</p>
+
+    <div class="role-meta">
+      <p><span>Role</span>Gameplay Programmer</p>
+      <p><span>Engine</span>Unreal Engine</p>
+      <p><span>Team</span>University team project, 8 members</p>
+    </div>
+
+    <ul class="tags">
+      <li>Boss AI</li><li>Save System</li><li>Gameplay Programming</li>
+    </ul>
+    <p class="tile-engine">Unreal Engine · 8-person team</p>
+  </section>
+
+  <div class="video-frame">
+    <div class="frame-inner">
+      <iframe
+        src="https://www.youtube.com/embed/etCt90jJJZc"
+        title="Sleepy Trigger gameplay"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Overview</h2>
+    <p>Sleepy Trigger is a third-person action game where a boy falls asleep holding three of his teddy animals and wakes up inside his own dream. Three bosses have stolen the teddies, and the player must fight through the dream world to recover them.</p>
+    <p>As the gameplay programmer on an eight-person team, I focused on building many of the core gameplay systems that tied the project together. My contributions included the save and persistence system, boss AI, inventory, quest tracking, projectiles, object physics, player movement, animation integration, gameplay UI, and portions of the scene lighting.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>What I Built</h2>
+    <ul>
+      <li>Save and persistence system</li>
+      <li>Boss AI and mini-boss encounters</li>
+      <li>Inventory system</li>
+      <li>Teddy collection and quest progression</li>
+      <li>Projectile combat system</li>
+      <li>Object physics</li>
+      <li>Character movement</li>
+      <li>Animation integration</li>
+      <li>Gameplay UI integration and UI design</li>
+      <li>Scene lighting</li>
+    </ul>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Technical Challenge: Full Game State Persistence</h2>
+    <p>Most student save systems only restore a few player variables. This system needed to restore the entire progression state of the game. Player health, collected teddy animals, defeated bosses, destroyed actors, quest progression, stamina, and player settings all had to survive a save/load cycle so the world returned exactly as the player left it.</p>
+    <p>A SaveData Blueprint stores the game's persistent variables while a BP_QuestManager gathers the current game state, builds the save object, and writes it to disk. Loading follows the same process in reverse, restoring every saved value back into the game.</p>
+    <p>The more difficult part wasn't saving the variables. It was restoring the world correctly. Progression is built around defeating bosses that unlock the next area. Loading a save had to restore not only whether a boss was defeated, but everything that depended on it: progression obstacles stayed removed, completed encounters remained complete, and the next area stayed accessible. The goal wasn't simply restoring data, it was restoring the player's progress exactly as they had left it.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Technical Challenge: Boss AI Without State Trees</h2>
+    <p>When I built this project, I didn't know about Unreal Engine's State Tree or Behavior Tree systems, so I implemented the boss AI manually.</p>
+    <p>The BedMonster presented an unusual challenge because it never moves. Instead of chasing the player, both arms remain attached to the bed while the player moves around the arena. Rather than relying on pathfinding, the AI only needed to determine which arm should attack and when.</p>
+
+    <div class="subsection">
+      <h3>Zone-based attack selection</h3>
+      <p>The arena is divided into two collision zones, one for each arm. Entering a zone activates the corresponding arm, while each arm randomly selects between its slam and swipe attacks instead of following a fixed sequence. A shared clap attack can trigger from either side, making the fight less predictable. The hands themselves use multiple collision boxes that match the shape of the fingers and palm instead of relying on a single large collision volume, producing more accurate hit detection during each animation.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Difficulty ramp</h3>
+      <p>The encounter also becomes more aggressive as the fight progresses. Robot dogs spawn alongside the boss, with spawn frequency increasing as the BedMonster's health decreases. Rather than spawning on a simple timer, dog spawns are tied to the boss's own attack count, creating a natural difficulty ramp over the course of the fight.</p>
+    </div>
+
+    <p>Looking back, I'd rebuild this system today using Unreal's State Tree or Behavior Tree tools. At the time, building it manually taught me a great deal about structuring gameplay logic without relying on Unreal's built-in AI frameworks.</p>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>Debugging</h2>
+
+    <div class="bug-block">
+      <h3>Attack animations interrupting each other</h3>
+      <p>While building the animation Blueprint, new attacks could begin before the current animation had finished playing, causing attack animations to snap directly into the next one.</p>
+      <p>The fix was delaying the next attack until the remaining duration of the current animation had completed. This ensured every attack finished cleanly before another could begin.</p>
+    </div>
+
+    <div class="bug-block">
+      <h3>Quest tracker synchronization</h3>
+      <p>The quest tracker occasionally displayed duplicate quests, failed to display quests, or didn't correctly move completed objectives into the completed section.</p>
+      <p>The issue turned out to be a struct-scoping mistake. Every quest was being built from the same shared quest struct instead of its own independent instance, causing multiple quests to overwrite one another's data. Creating a separate quest struct variable for each quest resolved the synchronization issues.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="content-section">
+    <h2>What I'd Do Differently</h2>
+    <div class="decision-block">
+      <p>Knowing what I know now, I'd rebuild the boss AI using Unreal Engine's State Tree or Behavior Tree systems instead of manually managing the logic. The overall behavior would be easier to extend and maintain as the encounter grew more complex.</p>
+      <p>I'd also redesign the quest system so each quest constructs its own local struct during creation rather than relying on separate persistent variables. While the original implementation worked correctly, the newer approach would scale more cleanly as additional quests were added.</p>
+    </div>
+  </section>
+
+  <nav class="footer-nav">
+    <a href="index.html#work">← Back to all projects</a>
+  </nav>
+
+</main>
+
+<footer id="contact">
+  <p class="footer-name">Ben Brown</p>
+  <p class="footer-contact">brownben678@gmail.com · <a href="https://github.com/benbrowndev">github.com/benbrowndev</a></p>
+  <p class="footer-meta">Copyright © 2026 by Ben Brown</p>
+</footer>
+
+</body>
+</html>
